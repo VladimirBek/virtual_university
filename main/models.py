@@ -5,6 +5,7 @@ from users.models import NULLABLE, User
 
 class Course(models.Model):
     name = models.CharField(max_length=50, verbose_name='название')
+    owner = models.ForeignKey('users.User', verbose_name='владелец курса', on_delete=models.CASCADE, **NULLABLE)
     preview = models.ImageField(upload_to='course', verbose_name='превью', **NULLABLE)
     description = models.TextField(verbose_name='описание', **NULLABLE)
     lessons = models.ManyToManyField('Lesson', related_name='lesson_set')
@@ -19,6 +20,7 @@ class Course(models.Model):
 
 class Lesson(models.Model):
     name = models.CharField(max_length=50, verbose_name='название')
+    owner = models.ForeignKey('users.User', verbose_name='владелец урока', on_delete=models.CASCADE, **NULLABLE)
     description = models.TextField(verbose_name='описание', **NULLABLE)
     preview = models.ImageField(upload_to='course', verbose_name='превью', **NULLABLE)
     video_link = models.URLField(verbose_name='ссылка на видео', **NULLABLE)
