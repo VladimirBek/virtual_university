@@ -9,6 +9,7 @@ class Course(models.Model):
     preview = models.ImageField(upload_to='course', verbose_name='превью', **NULLABLE)
     description = models.TextField(verbose_name='описание', **NULLABLE)
     lessons = models.ManyToManyField('Lesson', related_name='lesson_set')
+    url = models.URLField(max_length=30, default="youtube.com", verbose_name='ссылка на курс', **NULLABLE)
 
     def __str__(self):
         return self.name
@@ -51,3 +52,12 @@ class Payment(models.Model):
 
     def __str__(self):
         return f"{self.user.email} - {self.payment_date} - {self.user}"
+
+
+class Subscription(models.Model):
+    is_active = models.BooleanField(default=True, verbose_name='подписка')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, **NULLABLE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, **NULLABLE)
+
+    def __str__(self):
+        return f'{self.user} | {self.course.name}'
