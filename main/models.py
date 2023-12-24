@@ -45,6 +45,7 @@ class Payment(models.Model):
         ('transfer', 'Перевод на счет'),
     ]
     payment_method = models.CharField(max_length=10, choices=payment_method_choices)
+    payment_intent_id = models.CharField(max_length=50, **NULLABLE)
 
     def __str__(self):
         return f"{self.user.email} - {self.payment_date} - {self.user}"
