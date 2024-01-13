@@ -8,7 +8,7 @@ from main.serializers import CourseSerializer, LessonSerializer, PaymentSerializ
     SubscriptionCreateSerializer
 from main.servises import checkout_session, create_payment
 from users.permissions import IsModerator, IsOwner
-
+from main.tasks import check_change_course
 
 class CourseViewSet(viewsets.ModelViewSet):
     """ ViewSet for the Course class. """
@@ -24,6 +24,14 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return Course.objects.filter(owner=self.request.user)
+
+    def perform_update(self, serializer):
+        instance = self.get_object()
+        updated_inctance = serializer.save(owner=self.request.user)
+        updated_inctance.owner = self.request.user
+
+        check_change_course.delay(instance.id, instance.updated_at, updated_inctance.updated_at)
+        updated_inctance.save()
 
 
 
