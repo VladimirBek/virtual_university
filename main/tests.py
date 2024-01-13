@@ -1,8 +1,8 @@
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from models import Course, Subscription
-from models import Lesson
+from main.models import Course, Subscription
+from main.models import Lesson
 
 from users.models import User
 
@@ -23,15 +23,15 @@ class LessonsTestCase(APITestCase):
 
     def test_create_lesson(self):
         data = {
-            "owner": 1,
             "name": "name",
             "description": "description",
-            "url": "https://youtube.com",
-            "course": 1,
+            "video_link": "https://youtube.com",
+            "owner": self.user.id,
+            "course": [self.course.id]
         }
 
         response = self.client.post(
-            "/api/v1/lessons/create/",
+            "/lessons/create/",
             data=data,
         )
 
@@ -47,13 +47,13 @@ class LessonsTestCase(APITestCase):
             "owner": self.user,
             "name": "name",
             "description": "description",
-            "url": "https://youtube.com",
+            "video_link": "https://youtube.com",
         }
 
         lesson = Lesson.objects.create(**data)
         lesson.course.add(self.course)
 
-        response = self.client.delete(f"/api/v1/lessons/delete/{lesson.id}/")
+        response = self.client.delete(f"/lessons/delete/{lesson.id}/")
 
         self.assertEqual(
             response.status_code,
@@ -68,14 +68,14 @@ class LessonsTestCase(APITestCase):
             "owner": self.user,
             "name": "name",
             "description": "description",
-            "url": "https://youtube.com",
+            "video_link": "https://youtube.com",
         }
 
         lesson = Lesson.objects.create(**data)
         lesson.course.add(self.course)
 
         response = self.client.get(
-            f"/api/v1/lessons/",
+            f"/lessons/",
         )
 
         self.assertEqual(
@@ -89,7 +89,7 @@ class LessonsTestCase(APITestCase):
             "owner": self.user,
             "name": "name",
             "description": "description",
-            "url": "https://youtube.com",
+            "video_link": "https://youtube.com",
         }
 
         lesson = Lesson.objects.create(**data)
@@ -99,13 +99,13 @@ class LessonsTestCase(APITestCase):
             "owner": self.user.id,
             "name": "name_update",
             "description": "description",
-            "url": "https://youtube.com",
+            "video_link": "https://youtube.com",
             "course": self.course.id,
         }
 
         response = self.client.put(
-            f"/api/v1/lessons/update/{lesson.id}/",
-            data_for_update,
+            f"/lessons/update/{lesson.id}/",
+            data=data_for_update,
         )
 
         self.assertEqual(
@@ -138,7 +138,7 @@ class SubscriptionTestCase(APITestCase):
 
         }
 
-        response = self.client.post(f'/api/v1/subscriptions/create/', data)
+        response = self.client.post(f'/subscriptions/create/', data)
 
         self.assertEquals(response.status_code, status.HTTP_201_CREATED)
         self.assertEquals(Subscription.objects.all().count(), 1)
@@ -154,7 +154,7 @@ class SubscriptionTestCase(APITestCase):
         }
         sub = Subscription.objects.create(**data)
 
-        response = self.client.delete(f'/api/v1/subscriptions/delete/{sub.id}/')
+        response = self.client.delete(f'/subscriptions/delete/{sub.id}/')
 
         self.assertEquals(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEquals(Subscription.objects.all().count(), 0)

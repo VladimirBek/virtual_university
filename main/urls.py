@@ -4,7 +4,7 @@ from rest_framework import routers
 from main.apps import MainConfig
 from main.models import Lesson
 from main.views import CourseViewSet, LessonListAPI, LessonCreateAPI, LessonRetrieveAPI, LessonUpdateAPI, \
-    LessonDestroyAPI, PaymentListView, PaymentCreateView
+    LessonDestroyAPI, PaymentListView, PaymentCreateView, SubscriptionCreate, SubscriptionList, SubscriptionDelete
 
 app_name = MainConfig.name
 

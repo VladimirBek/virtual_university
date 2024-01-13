@@ -7,14 +7,14 @@ from main.pagination import PaginationsCourse
 from main.serializers import CourseSerializer, LessonSerializer, PaymentSerializer, SubscriptionSerializer, \
     SubscriptionCreateSerializer
 from main.servises import checkout_session, create_payment
-from users.permissions import IsModerator
+from users.permissions import IsModerator, IsOwner
 
 
 class CourseViewSet(viewsets.ModelViewSet):
     """ ViewSet for the Course class. """
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
-    permission_classes = [IsModerator]
+    permission_classes = [IsOwner, IsModerator]
     pagination_class = PaginationsCourse
 
     def perform_create(self, serializer):
@@ -26,11 +26,13 @@ class CourseViewSet(viewsets.ModelViewSet):
         return Course.objects.filter(owner=self.request.user)
 
 
+
+
 class LessonListAPI(generics.ListAPIView):
     """ View for getting all lessons. """
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-    permission_classes = [IsModerator]
+    permission_classes = [IsModerator, IsOwner]
     pagination_class = PaginationsCourse
 
     def get_queryset(self):
@@ -45,28 +47,28 @@ class LessonRetrieveAPI(generics.RetrieveAPIView):
     """ View for getting one lesson. """
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
-    permission_classes = [IsModerator]
+    permission_classes = [IsModerator, IsOwner]
 
 
 class LessonCreateAPI(generics.CreateAPIView):
     """ View for creating one lesson. """
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-    permission_classes = [IsModerator]
+    permission_classes = [IsModerator, IsOwner]
 
 
 class LessonUpdateAPI(generics.UpdateAPIView):
     """ View for updating one lesson. """
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-    permission_classes = [IsModerator]
+    permission_classes = [IsOwner]
 
 
 class LessonDestroyAPI(generics.DestroyAPIView):
     """ View for deleting one lesson. """
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
-    permission_classes = [IsModerator]
+    permission_classes = [IsOwner]
 
 
 class PaymentListView(generics.ListAPIView):

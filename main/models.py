@@ -8,7 +8,7 @@ class Course(models.Model):
     owner = models.ForeignKey('users.User', verbose_name='владелец курса', on_delete=models.CASCADE, **NULLABLE)
     preview = models.ImageField(upload_to='course', verbose_name='превью', **NULLABLE)
     description = models.TextField(verbose_name='описание', **NULLABLE)
-    lessons = models.ManyToManyField('Lesson', related_name='lesson_set')
+    video_link = models.ManyToManyField('Lesson', related_name='lesson_set')
     url = models.URLField(max_length=30, default="youtube.com", verbose_name='ссылка на курс', **NULLABLE)
 
     def __str__(self):
@@ -24,9 +24,8 @@ class Lesson(models.Model):
     owner = models.ForeignKey('users.User', verbose_name='владелец урока', on_delete=models.CASCADE, **NULLABLE)
     description = models.TextField(verbose_name='описание', **NULLABLE)
     preview = models.ImageField(upload_to='course', verbose_name='превью', **NULLABLE)
-    video_link = models.URLField(verbose_name='ссылка на видео', **NULLABLE)
-
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, **NULLABLE)
+    video_link = models.URLField(max_length=30, verbose_name='ссылка на видео', **NULLABLE)
+    course = models.ManyToManyField("Course", verbose_name='курс')
 
     def __str__(self):
         return self.name
@@ -34,7 +33,6 @@ class Lesson(models.Model):
     class Meta:
         verbose_name = 'урок'
         verbose_name_plural = 'уроки'
-        ordering = ('-course',)
 
 
 class Payment(models.Model):

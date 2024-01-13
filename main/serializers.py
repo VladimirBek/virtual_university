@@ -10,17 +10,18 @@ class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
         fields = '__all__'
-        validators = [UrlValidate(value="url")]
+        validators = [UrlValidate(value="video_link")]
 
 
 class CourseSerializer(serializers.ModelSerializer):
     count_lessons = serializers.SerializerMethodField()
     lessons = LessonSerializer(many=True, read_only=True, source='lesson_set')
+    is_subscribed = SerializerMethodField()
 
     class Meta:
         model = Course
         fields = '__all__'
-        validators = [UrlValidate(value="link_video")]
+        validators = [UrlValidate(value="video_link")]
 
     def get_count_lessons(self, course):
         count = int(course.lesson_set.count())
@@ -31,6 +32,7 @@ class CourseSerializer(serializers.ModelSerializer):
         if request and request.user.is_authenticated:
             return Subscription.objects.filter(user=request.user, course=obj).exists()
         return False
+
 
 class SubscriptionSerializer(serializers.ModelSerializer):
     user = SerializerMethodField()
@@ -50,6 +52,7 @@ class SubscriptionCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subscription
         fields = '__all__'
+
 
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
