@@ -1,13 +1,9 @@
-FROM python:3.11-slim
+FROM python:3
 
-ENV PYTHONDONTWRITEBYCODE 1
-ENV PYTHONUNBUFFERED 1
+WORKDIR /drf
 
-WORKDIR /app
-
-COPY ./requirements.txt  /app/
+COPY ./requirements.txt .
 
 RUN pip install -r requirements.txt
 
 COPY . .
-
