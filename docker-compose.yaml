@@ -8,14 +8,12 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data/pgdata
 
   redis:
     image: redis:7.0.2-alpine
     container_name: redis_app
     command: redis-server --save 20 1 --loglevel warning
-    ports:
-      - "6378:6378"
     volumes:
       - .data.cache:/data
     networks:
@@ -23,7 +21,7 @@ services:
 
   app:
     build: .
-    command: python manage.py migrate && python manage.py runserver 0.0.0.0:8000
+    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     ports:
       - '8000:8000'
     depends_on:
@@ -41,3 +39,5 @@ services:
       - redis
     networks:
       - default
+volumes:
+  postgres_data:

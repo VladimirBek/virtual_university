@@ -89,8 +89,10 @@ WSGI_APPLICATION = 'virtual_university.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.getenv("DB_NAME"),
-        'USER': os.getenv("DB_USER"),
+        'NAME': os.getenv("POSTGRES_DB"),
+        'USER': os.getenv("POSTGRES_USER"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+        "HOST": "db"
     }
 }
 
@@ -174,8 +176,8 @@ CORS_ALLOW_ALL_ORIGINS = False
 STRIPE_API_KEY = os.getenv("STRIPE_API_KEY")
 STRIPE_URL = os.getenv("STRIPE_URL")
 
-CELERY_BROKER_URL = "redis://redis:6378"
-CELERY_RESULT_BACKEND = "redis://redis:6378"
+CELERY_BROKER_URL = "redis://redis:6379"
+CELERY_RESULT_BACKEND = "redis://redis:6379"
 
 # Часовой пояс для работы Celery
 CELERY_TIMEZONE = "Europe/Moscow"

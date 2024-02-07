@@ -2,8 +2,9 @@
 Для работы с переменными окружениями необходимо создать файл .env и заполнить его слеующими переменными
 
 
-- DB_NAME
-- DB_USER
+- POSTGRES_USER=
+- POSTGRES_PASSWORD=
+- POSTGRES_DB=
 - STRIPE_API_KEY
 - STRIPE_URL
 
